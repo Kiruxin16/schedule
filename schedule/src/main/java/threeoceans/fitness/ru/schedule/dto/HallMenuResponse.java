@@ -1,4 +1,4 @@
-package threeoceans.fitness.ru.accounts.schedule.dto;
+package threeoceans.fitness.ru.schedule.dto;
 
 
 import lombok.Data;

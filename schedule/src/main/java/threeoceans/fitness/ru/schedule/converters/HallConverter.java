@@ -1,10 +1,10 @@
-package threeoceans.fitness.ru.accounts.schedule.converters;
+package threeoceans.fitness.ru.schedule.converters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import threeoceans.fitness.ru.accounts.schedule.dto.HallInfoResponse;
-import threeoceans.fitness.ru.accounts.schedule.dto.HallMenuResponse;
-import threeoceans.fitness.ru.accounts.schedule.entities.Hall;
+import threeoceans.fitness.ru.schedule.dto.HallInfoResponse;
+import threeoceans.fitness.ru.schedule.dto.HallMenuResponse;
+import threeoceans.fitness.ru.schedule.entities.Hall;
 
 @Component
 @RequiredArgsConstructor

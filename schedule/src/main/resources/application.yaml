@@ -1,7 +1,7 @@
 server:
   port: 8191
   servlet:
-    context-path: /schedule #/three-oceans.fitness
+    context-path: /schedule-service #/three-oceans.fitness
 
 spring:
   datasource:
@@ -15,3 +15,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
+
+
+integration:
+  account-service:
+    url: http://localhost:8189/account-service
+    read-timeout: 10000
+    write-timeout: 5000
+    connect-timeout: 500

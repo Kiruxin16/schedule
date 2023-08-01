@@ -1,9 +1,9 @@
-package threeoceans.fitness.ru.accounts.schedule.services;
+package threeoceans.fitness.ru.schedule.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import threeoceans.fitness.ru.accounts.schedule.entities.Hall;
-import threeoceans.fitness.ru.accounts.schedule.repositories.HallRepository;
+import threeoceans.fitness.ru.schedule.entities.Hall;
+import threeoceans.fitness.ru.schedule.repositories.HallRepository;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package threeoceans.fitness.ru.accounts.schedule.entities;
+package threeoceans.fitness.ru.schedule.entities;
 
 
 import jakarta.persistence.*;

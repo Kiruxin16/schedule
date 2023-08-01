@@ -1,4 +1,4 @@
-package threeoceans.fitness.ru.accounts.schedule;
+package threeoceans.fitness.ru.schedule;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

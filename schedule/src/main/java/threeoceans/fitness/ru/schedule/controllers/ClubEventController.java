@@ -1,12 +1,12 @@
-package threeoceans.fitness.ru.accounts.schedule.controllers;
+package threeoceans.fitness.ru.schedule.controllers;
 
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import threeoceans.fitness.ru.accounts.schedule.dto.ClubEventResponse;
-import threeoceans.fitness.ru.accounts.schedule.dto.HallInfoResponse;
-import threeoceans.fitness.ru.accounts.schedule.dto.HallMenuResponse;
-import threeoceans.fitness.ru.accounts.schedule.services.ClubEventService;
+import threeoceans.fitness.ru.schedule.dto.ClubEventResponse;
+import threeoceans.fitness.ru.schedule.dto.HallInfoResponse;
+import threeoceans.fitness.ru.schedule.dto.HallMenuResponse;
+import threeoceans.fitness.ru.schedule.services.ClubEventService;
 
 import java.util.List;
 
@@ -51,7 +51,9 @@ public class ClubEventController {
     }
 
     @PostMapping("/subscribe/{id}")
-    public void subscribeAtEvent(@PathVariable(name="id")Long eventID){
+    public void subscribeAtEvent(@RequestHeader(name="login")String login,  @PathVariable(name="id")Long eventID){
+
+         clubEventService.subscribeUser(login,eventID);
 
     }
 
