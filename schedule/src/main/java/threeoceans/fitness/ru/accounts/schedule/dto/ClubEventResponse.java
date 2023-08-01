@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClubEventResponce {
+public class ClubEventResponse {
 
     private Long id;
 
