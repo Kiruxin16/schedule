@@ -7,6 +7,7 @@ import threeoceans.fitness.ru.schedule.dto.ClubEventResponse;
 import threeoceans.fitness.ru.schedule.dto.HallInfoResponse;
 import threeoceans.fitness.ru.schedule.dto.HallMenuResponse;
 import threeoceans.fitness.ru.schedule.services.ClubEventService;
+import threeoceans.fitness.ru.schedule.services.ParticipantService;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class ClubEventController {
 
     private final ClubEventService clubEventService;
+    private final ParticipantService participantService;
 
     @GetMapping
     public List<ClubEventResponse> findAllEvents(){
@@ -59,10 +61,11 @@ public class ClubEventController {
 
     @PostMapping("/unsubscribe/{id}")
     public void unsubscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
+
         try {
             clubEventService.unsubscribeClient(login,eventID);
-        }catch (Exception e){
-
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
 

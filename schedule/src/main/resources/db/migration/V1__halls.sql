@@ -5,7 +5,7 @@ CREATE TABLE halls(
                 description VARCHAR(255)
 );
 
-INSERT INTO halls(name,adress,description) VALUES
+INSERT INTO halls(name,address,description) VALUES
         ('Фитнес площадка','Ленина 140 п.10','Зал используемый для групповых занятий фитнесом'),
         ('Тренажерный зал','Ленина 140 п.23','Зал оснащенный тренажерами и железом'),
         ('Зал единоборств','Мокрушина 11 гл. вх','Зал для проведения занятий по контактным дисциплинам'),

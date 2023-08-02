@@ -2,7 +2,9 @@ package threeoceans.fitness.ru.schedule.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import threeoceans.fitness.ru.schedule.converters.ClubEventConverter;
 import threeoceans.fitness.ru.schedule.converters.HallConverter;
 import threeoceans.fitness.ru.schedule.dto.*;
@@ -14,6 +16,7 @@ import threeoceans.fitness.ru.schedule.repositories.ClubEventRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ClubEventService {
@@ -85,20 +88,28 @@ public class ClubEventService {
     }
 
 
-    public void unsubscribeClient(String login,Long eventId) throws Exception {
 
-        Participant participant = getParticipantFromEvent(login,eventId);
+    public void unsubscribeClient(String login,Long eventId) throws Exception  {
 
-        accountService.unsubscribeClient(participant.getSubscriptionID());
-
-        participantService.delete(participant);
-    }
-    @Transactional
-    private Participant getParticipantFromEvent(String login,Long eventId) throws Exception{
         ClubEvent event = clubEventRepository.findById(eventId).get();
-        return event.getParticipants().stream().filter(p->p.getLogin().equals(login))
+        Participant temp = event.getParticipants().stream().filter(p->p.getLogin().equals(login))
                 .findFirst().orElseThrow(Exception::new);
+        event.getParticipants().clear();
+
+
+
+        accountService.unsubscribeClient(temp.getSubscriptionID());
+
+
+        participantService.deleteById(temp.getId());
+
+
     }
+
+
+
+
+
 
 
 

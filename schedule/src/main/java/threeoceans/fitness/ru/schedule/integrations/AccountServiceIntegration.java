@@ -17,7 +17,7 @@ public class AccountServiceIntegration {
 
     public SubScheduleResponse subscribeClient(SubScheduleRequest subRequest){
         return accountServiceWebClient.post()
-                .uri("/api/v1/clients/accounts/subscriptions/subscribe")
+                .uri("/api/v1/clients/subscriptions/subscribe")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(subRequest)
                 .retrieve()
@@ -29,7 +29,7 @@ public class AccountServiceIntegration {
 
     public void unsubscribeClient(Long subId){
          accountServiceWebClient.post()
-                .uri("/api/v1/clients/accounts/subscriptions/unsubscribe/"+subId)
+                .uri("/api/v1/clients/subscriptions/unsubscribe/"+subId)
                 .retrieve()
                 .toBodilessEntity()
                 .block();
