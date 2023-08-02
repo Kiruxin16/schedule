@@ -53,17 +53,25 @@ public class ClubEventController {
     @PostMapping("/subscribe/{id}")
     public void subscribeAtEvent(@RequestHeader(name="login")String login,  @PathVariable(name="id")Long eventID){
 
-         clubEventService.subscribeUser(login,eventID);
+         clubEventService.subscribeClient(login,eventID);
 
     }
 
     @PostMapping("/unsubscribe/{id}")
-    public void usubscribeAtEvent(@PathVariable(name="id")Long eventID){
+    public void unsubscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
+        try {
+            clubEventService.unsubscribeClient(login,eventID);
+        }catch (Exception e){
+
+        }
+
 
     }
 
     @PostMapping("/confirm/{id}")
     public void confirmEvent(@PathVariable(name="id")Long eventID){
+        clubEventService.confirmEvent(eventID);
+
 
     }
 }

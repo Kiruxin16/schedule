@@ -47,13 +47,13 @@ public class ClubEventService {
         return hallConverter.hallToInfoResponse(hallService.findById(hallId));
     }
 
-    @Transactional
-    public void subscribeUser(String login, Long eventID) {
+
+    public void subscribeClient(String login, Long eventID) {
 
         ClubEvent event = clubEventRepository.findById(eventID).get();
 
         SubScheduleResponse subResponse = accountService
-                .subscribeUser(new SubScheduleRequest(login, event.getDiscipline()));
+                .subscribeClient(new SubScheduleRequest(login, event.getDiscipline()));
 
         Participant participant =new Participant();
         participant.setClubEvent(event);
@@ -64,5 +64,45 @@ public class ClubEventService {
         participantService.save(participant);
 
 
+
     }
+
+
+
+    public void confirmEvent(Long eventId){
+        List<Participant> participants = getAllParticipantsFromEvent(eventId);
+
+        for (Participant p:participants) {
+            accountService.confirmEvent(p.getSubscriptionID());
+        }
+
+    }
+
+    @Transactional
+    private List<Participant> getAllParticipantsFromEvent(Long eventId){
+        return  clubEventRepository.findById(eventId).get().getParticipants();
+
+    }
+
+
+    public void unsubscribeClient(String login,Long eventId) throws Exception {
+
+        Participant participant = getParticipantFromEvent(login,eventId);
+
+        accountService.unsubscribeClient(participant.getSubscriptionID());
+
+        participantService.delete(participant);
+    }
+    @Transactional
+    private Participant getParticipantFromEvent(String login,Long eventId) throws Exception{
+        ClubEvent event = clubEventRepository.findById(eventId).get();
+        return event.getParticipants().stream().filter(p->p.getLogin().equals(login))
+                .findFirst().orElseThrow(Exception::new);
+    }
+
+
+
+
+
+
 }

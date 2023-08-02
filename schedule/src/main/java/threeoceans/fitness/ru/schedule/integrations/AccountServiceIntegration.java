@@ -15,13 +15,33 @@ public class AccountServiceIntegration {
 
     private final WebClient accountServiceWebClient;
 
-    public SubScheduleResponse subscribeUser(SubScheduleRequest subRequest){
+    public SubScheduleResponse subscribeClient(SubScheduleRequest subRequest){
         return accountServiceWebClient.post()
                 .uri("/api/v1/clients/accounts/subscriptions/subscribe")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(subRequest)
                 .retrieve()
                 .bodyToMono(SubScheduleResponse.class)
+                .block();
+
+    }
+
+
+    public void unsubscribeClient(Long subId){
+         accountServiceWebClient.post()
+                .uri("/api/v1/clients/accounts/subscriptions/unsubscribe/"+subId)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+
+    }
+
+
+    public void confirmEvent(Long subId){
+        accountServiceWebClient.post()
+                .uri("/api/v1/clients/accounts/subscriptions/confirm/"+subId)
+                .retrieve()
+                .toBodilessEntity()
                 .block();
 
     }
