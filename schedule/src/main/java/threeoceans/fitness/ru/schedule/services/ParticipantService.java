@@ -9,7 +9,7 @@ import threeoceans.fitness.ru.schedule.repositories.ParticipantRepository;
 @RequiredArgsConstructor
 public class ParticipantService {
 
-    private final ParticipantRepository participantRepository
+    private final ParticipantRepository participantRepository;
 
     public void save(Participant participant){
         participantRepository.save(participant);
