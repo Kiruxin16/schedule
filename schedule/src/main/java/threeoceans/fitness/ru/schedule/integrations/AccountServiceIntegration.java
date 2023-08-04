@@ -39,7 +39,7 @@ public class AccountServiceIntegration {
 
     public void confirmEvent(Long subId){
         accountServiceWebClient.post()
-                .uri("/api/v1/clients/accounts/subscriptions/confirm/"+subId)
+                .uri("/api/v1/clients/subscriptions/confirm/"+subId)
                 .retrieve()
                 .toBodilessEntity()
                 .block();
