@@ -21,13 +21,14 @@ public class ClubEventResponse {
 
     private String coachName;
 
-    private LocalDate eventDate;
+    private String eventDate;
 
-    private LocalTime startTime;
+    private String startTime;
 
-    private LocalTime finishTime;
+    private String continues;
 
-    private String hall;
+
+    private String hall;//trigger
 
     private String comments;
 

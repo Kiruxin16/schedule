@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import threeoceans.fitness.ru.schedule.dto.ClubEventResponse;
 import threeoceans.fitness.ru.schedule.dto.HallInfoResponse;
 import threeoceans.fitness.ru.schedule.dto.HallMenuResponse;
+import threeoceans.fitness.ru.schedule.dto.ScheduleFrontResponse;
 import threeoceans.fitness.ru.schedule.services.ClubEventService;
 import threeoceans.fitness.ru.schedule.services.ParticipantService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -17,11 +19,10 @@ import java.util.List;
 public class ClubEventController {
 
     private final ClubEventService clubEventService;
-    private final ParticipantService participantService;
 
     @GetMapping
-    public List<ClubEventResponse> findAllEvents(){
-        return clubEventService.findAllEvents();
+    public ScheduleFrontResponse findAllEvents(){
+        return clubEventService.makeAnWeekSchedule();
     }
 
     @GetMapping("/halls")
@@ -51,6 +52,16 @@ public class ClubEventController {
         }
 
     }
+
+/*    @GetMapping("from-to")
+    public List<ClubEventResponse> getEventsForAWeek(
+            @RequestParam(name = "from")LocalDate start,
+            @RequestParam(name ="to")LocalDate end
+    ){
+        return clubEventService.getEventsFromTo(start,end);
+
+    }*/
+
 
     @PostMapping("/subscribe/{id}")
     public void subscribeAtEvent(@RequestHeader(name="login")String login,  @PathVariable(name="id")Long eventID){

@@ -1,10 +1,14 @@
 package threeoceans.fitness.ru.schedule.services;
 
 import jakarta.transaction.Transactional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import threeoceans.fitness.ru.schedule.converters.ClubEventConverter;
 import threeoceans.fitness.ru.schedule.converters.HallConverter;
 import threeoceans.fitness.ru.schedule.dto.*;
@@ -13,6 +17,9 @@ import threeoceans.fitness.ru.schedule.entities.Participant;
 import threeoceans.fitness.ru.schedule.integrations.AccountServiceIntegration;
 import threeoceans.fitness.ru.schedule.repositories.ClubEventRepository;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +27,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ClubEventService {
+
+    @Value("${strings.daysOfAWeek}")
+    private List<String> daysOfAWeek;
+
+    @Value("${strings.schedule}")
+    private List<String> scheduleTimer;
 
     private final ClubEventRepository clubEventRepository;
     private final ClubEventConverter clubEventConverter;
@@ -30,13 +43,13 @@ public class ClubEventService {
 
     public List<ClubEventResponse> findAllEvents(){
         return  clubEventRepository.findAll().stream()
-                .map(clubEventConverter::ClubEventToResponce)
+                .map(clubEventConverter::ClubEventToResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public List<ClubEventResponse> findAllEventsInHall(Long id) throws Exception{
-        return hallService.findById(id).getEvents().stream().map(clubEventConverter::ClubEventToResponce)
+        return hallService.findById(id).getEvents().stream().map(clubEventConverter::ClubEventToResponse)
                 .collect(Collectors.toList());
 
     }
@@ -44,6 +57,7 @@ public class ClubEventService {
     public List<HallMenuResponse> getAllHalls() {
         return hallService.findAll().stream().map(hallConverter::hallToMenuResponse)
                 .collect(Collectors.toList());
+
     }
 
     public HallInfoResponse getHallInfo(Long hallId) throws Exception  {
@@ -107,13 +121,41 @@ public class ClubEventService {
     }
 
 
+    public ScheduleFrontResponse makeAnWeekSchedule(){
+        ScheduleFrontResponse scheduleFrontResponse = new ScheduleFrontResponse();
+        HashMap<String,String> hallMap= new HashMap<>();
+        hallService.findAll()
+                .forEach(h -> hallMap.put(h.getTrigger(), h.getName()));
+        scheduleFrontResponse.setHalls(hallMap);
+        scheduleFrontResponse.setDaysOFWeek(new ArrayList<>(daysOfAWeek));
+        scheduleFrontResponse.setTrainingStartTime(new ArrayList<>(scheduleTimer));
+        LocalDate curDate = LocalDate.now();
+        LocalDate startOfAWeek= curDate.minusDays(curDate.getDayOfWeek().getValue()-1);
+        LocalDate endOfAWeek = curDate.plusDays(7-curDate.getDayOfWeek().getValue());
 
+        List<ClubEvent> weekEvents =getEventsFromTo(startOfAWeek,endOfAWeek);
 
+        List<DayScheduleResponse> weekSchedule=new ArrayList<>();
+        int iterator=1;
+        for (String day: daysOfAWeek) {
+            DayScheduleResponse d =new DayScheduleResponse();
+            d.setEventsOfADay(new ArrayList<>());
+            d.setDayOfWeek(day);
+            for (ClubEvent ce: weekEvents) {
+                if(ce.getEventDate().getDayOfWeek().getValue()==iterator){
+                    d.getEventsOfADay().add(clubEventConverter.ClubEventToResponse(ce));
+                }
+            }
+            weekSchedule.add(d);
+            iterator++;
+        }
+        scheduleFrontResponse.setEvents(weekSchedule);
+        return scheduleFrontResponse;
+    }
 
+    public List<ClubEvent> getEventsFromTo(LocalDate start, LocalDate end) {
+        return clubEventRepository
+                .getEventsFromTo(start,end);
 
-
-
-
-
-
+    }
 }
