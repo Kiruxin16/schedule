@@ -8,12 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import threeoceans.fitness.ru.schedule.converters.ClubEventConverter;
 import threeoceans.fitness.ru.schedule.converters.HallConverter;
 import threeoceans.fitness.ru.schedule.dto.*;
 import threeoceans.fitness.ru.schedule.entities.ClubEvent;
 import threeoceans.fitness.ru.schedule.entities.Participant;
+import threeoceans.fitness.ru.schedule.errors.AppError;
 import threeoceans.fitness.ru.schedule.integrations.AccountServiceIntegration;
 import threeoceans.fitness.ru.schedule.repositories.ClubEventRepository;
 
@@ -65,7 +67,7 @@ public class ClubEventService {
     }
 
 
-    public void subscribeClient(String login, Long eventID) {
+    public ResponseEntity<?> subscribeClient(String login, Long eventID) {
 
         ClubEvent event = clubEventRepository.findById(eventID).get();
 
@@ -80,15 +82,15 @@ public class ClubEventService {
 
         participantService.save(participant);
 
+        return ResponseEntity.ok("Вы успешно записались на занятие");
+
 
 
     }
 
 
-
     public void confirmEvent(Long eventId){
         List<Participant> participants = getAllParticipantsFromEvent(eventId);
-
         for (Participant p:participants) {
             accountService.confirmEvent(p.getSubscriptionID());
         }
@@ -103,20 +105,15 @@ public class ClubEventService {
 
 
 
-    public void unsubscribeClient(String login,Long eventId) throws Exception  {
-
+    public ResponseEntity<?> unsubscribeClient(String login,Long eventId) throws Exception  {
         ClubEvent event = clubEventRepository.findById(eventId).get();
         Participant temp = event.getParticipants().stream().filter(p->p.getLogin().equals(login))
                 .findFirst().orElseThrow(Exception::new);
         event.getParticipants().clear();
-
-
-
         accountService.unsubscribeClient(temp.getSubscriptionID());
-
-
         participantService.deleteById(temp.getId());
 
+        return ResponseEntity.ok("Вы выписались с занятия.");
 
     }
 
