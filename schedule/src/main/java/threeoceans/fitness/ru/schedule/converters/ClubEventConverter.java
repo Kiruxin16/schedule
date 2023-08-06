@@ -15,7 +15,7 @@ public class ClubEventConverter {
                 .discipline(event.getDiscipline())
                 .coachName(event.getCoachName())
                 .eventDate(event.getEventDate().toString())
-                .startTime(event.getStartTime().toString())
+                .startTime(event.getStartTime().toString().substring(0,5))
                 .duration(event.getDuration())
                 .hall(event.getHall().getTrigger())
                 .comments(event.getComments())
