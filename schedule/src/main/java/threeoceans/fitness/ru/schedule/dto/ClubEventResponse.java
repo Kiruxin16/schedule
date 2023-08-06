@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,7 +22,7 @@ public class ClubEventResponse {
 
     private String startTime;
 
-    private String continues;
+    private String duration;
 
 
     private String hall;//trigger
