@@ -122,40 +122,53 @@ public class ClubEventService {
 
 
     public ScheduleFrontResponse makeAnWeekSchedule(){
-        ScheduleFrontResponse scheduleFrontResponse = new ScheduleFrontResponse();
-        HashMap<String,String> hallMap= new HashMap<>();
-        hallService.findAll()
-                .forEach(h -> hallMap.put(h.getTrigger(), h.getName()));
-        scheduleFrontResponse.setHalls(hallMap);
-        scheduleFrontResponse.setDaysOFWeek(new ArrayList<>(daysOfAWeek));
-        scheduleFrontResponse.setTrainingStartTime(new ArrayList<>(scheduleTimer));
+        ScheduleFrontResponse scheduleFrontResponse =new ScheduleFrontResponse(hallService.findAll(),daysOfAWeek,scheduleTimer);
         LocalDate curDate = LocalDate.now();
         LocalDate startOfAWeek= curDate.minusDays(curDate.getDayOfWeek().getValue()-1);
         LocalDate endOfAWeek = curDate.plusDays(7-curDate.getDayOfWeek().getValue());
 
         List<ClubEvent> weekEvents =getEventsFromTo(startOfAWeek,endOfAWeek);
-
-        List<DayScheduleResponse> weekSchedule=new ArrayList<>();
-        int iterator=1;
-        for (String day: daysOfAWeek) {
-            DayScheduleResponse d =new DayScheduleResponse();
-            d.setEventsOfADay(new ArrayList<>());
-            d.setDayOfWeek(day);
-            for (ClubEvent ce: weekEvents) {
-                if(ce.getEventDate().getDayOfWeek().getValue()==iterator){
-                    d.getEventsOfADay().add(clubEventConverter.ClubEventToResponse(ce));
-                }
-            }
-            weekSchedule.add(d);
-            iterator++;
-        }
-        scheduleFrontResponse.setEvents(weekSchedule);
+        scheduleFrontResponse.setEvents(sortEventsByDays(weekEvents));
         return scheduleFrontResponse;
     }
 
-    public List<ClubEvent> getEventsFromTo(LocalDate start, LocalDate end) {
+
+
+
+
+    public ScheduleFrontResponse makeAnWeekScheduleForClient(String login) {
+        ScheduleFrontResponse scheduleFrontResponse =new ScheduleFrontResponse(hallService.findAll(),daysOfAWeek,scheduleTimer);
+        LocalDate curDate = LocalDate.now();
+        LocalDate startOfAWeek= curDate.minusDays(curDate.getDayOfWeek().getValue()-1);
+        LocalDate endOfAWeek = curDate.plusDays(7-curDate.getDayOfWeek().getValue());
+        List<ClubEvent> events = clubEventRepository.getEventsFromToByLogin(login,startOfAWeek,endOfAWeek);
+        scheduleFrontResponse.setEvents(sortEventsByDays(events));
+        return scheduleFrontResponse;
+
+    }
+
+
+    private List<ClubEvent> getEventsFromTo(LocalDate start, LocalDate end) {
         return clubEventRepository
                 .getEventsFromTo(start,end);
 
+    }
+
+    private List<DayScheduleResponse> sortEventsByDays(List<ClubEvent> events){
+        List<DayScheduleResponse> weekSchedule=new ArrayList<>();
+        int iterator=1;
+        for (String day: daysOfAWeek) {
+            DayScheduleResponse dayResponse =new DayScheduleResponse();
+            dayResponse.setDayOfWeek(day);
+            dayResponse.setEventsOfADay(new ArrayList<>());
+            for (ClubEvent ce: events) {
+                if(ce.getEventDate().getDayOfWeek().getValue()==iterator){
+                    dayResponse.getEventsOfADay().add(clubEventConverter.ClubEventToResponse(ce));
+                }
+            }
+            weekSchedule.add(dayResponse);
+            iterator++;
+        }
+        return weekSchedule;
     }
 }

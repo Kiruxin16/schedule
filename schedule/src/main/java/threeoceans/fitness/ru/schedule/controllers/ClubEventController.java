@@ -20,9 +20,14 @@ public class ClubEventController {
 
     private final ClubEventService clubEventService;
 
-    @GetMapping
+    @GetMapping("/general")
     public ScheduleFrontResponse findAllEvents(){
         return clubEventService.makeAnWeekSchedule();
+    }
+
+    @GetMapping("/personal")
+    public ScheduleFrontResponse findAllEventsForClient(@RequestHeader(name = "login")String login){
+        return clubEventService.makeAnWeekScheduleForClient(login);
     }
 
     @GetMapping("/halls")
