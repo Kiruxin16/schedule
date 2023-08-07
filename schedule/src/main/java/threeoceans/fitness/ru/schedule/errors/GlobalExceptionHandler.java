@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<AppError> catchResourceNotFoundException (ResourceNotFoundException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), "Ресурс не найден" + e.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), "Ресурс не найден: " + e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
 /*
@@ -31,5 +31,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<AppError> catchAuthException (AuthException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), "ошибка авторизации: " + e.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AppError> catchReservationException (ReservationException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Ошибка записи: "+ e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

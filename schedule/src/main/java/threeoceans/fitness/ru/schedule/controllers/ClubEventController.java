@@ -79,11 +79,9 @@ public class ClubEventController {
     @PostMapping("/unsubscribe/{id}")
     public ResponseEntity<?> unsubscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
 
-        try {
+
         return clubEventService.unsubscribeClient(login,eventID);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("");
-        }
+
 
 
 

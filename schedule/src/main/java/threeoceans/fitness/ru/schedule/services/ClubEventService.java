@@ -16,6 +16,8 @@ import threeoceans.fitness.ru.schedule.dto.*;
 import threeoceans.fitness.ru.schedule.entities.ClubEvent;
 import threeoceans.fitness.ru.schedule.entities.Participant;
 import threeoceans.fitness.ru.schedule.errors.AppError;
+import threeoceans.fitness.ru.schedule.errors.ReservationException;
+import threeoceans.fitness.ru.schedule.errors.ResourceNotFoundException;
 import threeoceans.fitness.ru.schedule.integrations.AccountServiceIntegration;
 import threeoceans.fitness.ru.schedule.repositories.ClubEventRepository;
 
@@ -71,6 +73,10 @@ public class ClubEventService {
 
         ClubEvent event = clubEventRepository.findById(eventID).get();
 
+        if(event.getParticipants().stream().anyMatch(p -> p.getLogin().equals(login))){
+            throw new ReservationException("вы уже записаны.");
+        }
+
         SubScheduleResponse subResponse = accountService
                 .subscribeClient(new SubScheduleRequest(login, event.getDiscipline()));
 
@@ -105,10 +111,10 @@ public class ClubEventService {
 
 
 
-    public ResponseEntity<?> unsubscribeClient(String login,Long eventId) throws Exception  {
+    public ResponseEntity<?> unsubscribeClient(String login,Long eventId)  {
         ClubEvent event = clubEventRepository.findById(eventId).get();
         Participant temp = event.getParticipants().stream().filter(p->p.getLogin().equals(login))
-                .findFirst().orElseThrow(Exception::new);
+                .findFirst().orElseThrow(() -> new ResourceNotFoundException("вы не были записаны на это занятие."));
         event.getParticipants().clear();
         accountService.unsubscribeClient(temp.getSubscriptionID());
         participantService.deleteById(temp.getId());
