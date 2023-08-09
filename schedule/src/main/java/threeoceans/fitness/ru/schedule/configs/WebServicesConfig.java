@@ -12,30 +12,49 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.TcpClient;
-import threeoceans.fitness.ru.schedule.properties.AccountServiceIntergrationProperties;
+import threeoceans.fitness.ru.schedule.properties.AccountServiceIntegrationProperties;
+import threeoceans.fitness.ru.schedule.properties.SubscriptionServiceIntegrationProperties;
 
 
 import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableConfigurationProperties(AccountServiceIntergrationProperties.class)
+@EnableConfigurationProperties({AccountServiceIntegrationProperties.class, SubscriptionServiceIntegrationProperties.class})
 public class WebServicesConfig {
 
-    private  final AccountServiceIntergrationProperties accountServiceIntergrationProperties;
+    private  final AccountServiceIntegrationProperties accountServiceIntegrationProperties;
+    private  final SubscriptionServiceIntegrationProperties subscriptionServiceIntegrationProperties;
 
     @Bean
     public WebClient accountServiceWebClient(){
         TcpClient tcpClient =TcpClient
                 .create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,accountServiceIntergrationProperties.getConnectionTimeout())
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, accountServiceIntegrationProperties.getConnectionTimeout())
                 .doOnConnected(connection -> {
-                    connection.addHandlerLast(new ReadTimeoutHandler(accountServiceIntergrationProperties.getReadTimeout(), TimeUnit.MILLISECONDS));
-                    connection.addHandlerLast(new WriteTimeoutHandler(accountServiceIntergrationProperties.getWriteTimeout(), TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new ReadTimeoutHandler(accountServiceIntegrationProperties.getReadTimeout(), TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new WriteTimeoutHandler(accountServiceIntegrationProperties.getWriteTimeout(), TimeUnit.MILLISECONDS));
                 });
         return WebClient
                 .builder()
-                .baseUrl(accountServiceIntergrationProperties.getUrl())
+                .baseUrl(accountServiceIntegrationProperties.getUrl())
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
+                .build();
+    }
+
+
+    @Bean
+    public WebClient subscriptionServiceWebClient(){
+        TcpClient tcpClient =TcpClient
+                .create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, subscriptionServiceIntegrationProperties.getConnectionTimeout())
+                .doOnConnected(connection -> {
+                    connection.addHandlerLast(new ReadTimeoutHandler(subscriptionServiceIntegrationProperties.getReadTimeout(), TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new WriteTimeoutHandler(subscriptionServiceIntegrationProperties.getWriteTimeout(), TimeUnit.MILLISECONDS));
+                });
+        return WebClient
+                .builder()
+                .baseUrl(subscriptionServiceIntegrationProperties.getUrl())
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
                 .build();
     }

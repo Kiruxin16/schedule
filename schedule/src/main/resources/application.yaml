@@ -23,6 +23,11 @@ integration:
     read-timeout: 10000
     write-timeout: 5000
     connect-timeout: 500
+  subscription-service:
+    url: http://localhost:8193/subscription-service
+    read-timeout: 10000
+    write-timeout: 5000
+    connect-timeout: 500
 
 
 strings:
