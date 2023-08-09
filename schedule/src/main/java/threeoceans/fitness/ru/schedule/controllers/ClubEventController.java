@@ -4,10 +4,7 @@ package threeoceans.fitness.ru.schedule.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import threeoceans.fitness.ru.schedule.dto.ClubEventResponse;
-import threeoceans.fitness.ru.schedule.dto.HallInfoResponse;
-import threeoceans.fitness.ru.schedule.dto.HallMenuResponse;
-import threeoceans.fitness.ru.schedule.dto.ScheduleFrontResponse;
+import threeoceans.fitness.ru.schedule.dto.*;
 import threeoceans.fitness.ru.schedule.services.ClubEventService;
 import threeoceans.fitness.ru.schedule.services.ParticipantService;
 
@@ -59,14 +56,12 @@ public class ClubEventController {
 
     }
 
-/*    @GetMapping("from-to")
-    public List<ClubEventResponse> getEventsForAWeek(
-            @RequestParam(name = "from")LocalDate start,
-            @RequestParam(name ="to")LocalDate end
-    ){
-        return clubEventService.getEventsFromTo(start,end);
 
-    }*/
+    @GetMapping("/{id}/info")
+    public EventInfoResponse getEventInfo(@PathVariable(name ="id")Long eventId){
+        return clubEventService.getEventInfo(eventId);
+
+    }
 
 
     @PostMapping("/subscribe/{id}")

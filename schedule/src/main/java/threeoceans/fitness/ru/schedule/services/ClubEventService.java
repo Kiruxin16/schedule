@@ -1,10 +1,12 @@
 package threeoceans.fitness.ru.schedule.services;
 
+import ch.qos.logback.core.boolex.EventEvaluator;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.flywaydb.core.api.callback.Event;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,6 +16,7 @@ import threeoceans.fitness.ru.schedule.converters.ClubEventConverter;
 import threeoceans.fitness.ru.schedule.converters.HallConverter;
 import threeoceans.fitness.ru.schedule.dto.*;
 import threeoceans.fitness.ru.schedule.entities.ClubEvent;
+import threeoceans.fitness.ru.schedule.entities.Hall;
 import threeoceans.fitness.ru.schedule.entities.Participant;
 import threeoceans.fitness.ru.schedule.errors.AppError;
 import threeoceans.fitness.ru.schedule.errors.ReservationException;
@@ -173,5 +176,24 @@ public class ClubEventService {
             iterator++;
         }
         return weekSchedule;
+    }
+
+    public EventInfoResponse getEventInfo(Long eventId) {
+        EventInfoResponse eventInfoResponse = new EventInfoResponse();
+        ClubEvent event = clubEventRepository.findById(eventId).orElseThrow(()->new ResourceNotFoundException("занятие не найдено"));
+        eventInfoResponse.setHall(hallConverter.hallToInfoResponse(event.getHall()));
+
+        eventInfoResponse.setDiscipline(new DisciplineResponse()); //TODO запилить сервис ходящий в subscription service за дисциплиной
+
+        eventInfoResponse.setTrainer(new TrainerResponse());//TODO запилить сервис ходящий в account service за тренеhом
+
+        eventInfoResponse.setDate(event.getEventDate().toString());
+        eventInfoResponse.setDuration(event.getDuration().toString());
+        eventInfoResponse.setStartTime(event.getStartTime().toString());
+
+
+
+
+        return eventInfoResponse;
     }
 }
