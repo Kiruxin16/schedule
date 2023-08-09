@@ -22,6 +22,7 @@ import threeoceans.fitness.ru.schedule.errors.AppError;
 import threeoceans.fitness.ru.schedule.errors.ReservationException;
 import threeoceans.fitness.ru.schedule.errors.ResourceNotFoundException;
 import threeoceans.fitness.ru.schedule.integrations.AccountServiceIntegration;
+import threeoceans.fitness.ru.schedule.integrations.SubscriptionServiceIntegration;
 import threeoceans.fitness.ru.schedule.repositories.ClubEventRepository;
 
 import java.time.LocalDate;
@@ -47,6 +48,7 @@ public class ClubEventService {
     private final HallConverter hallConverter;
     private final AccountServiceIntegration accountService;
     private final ParticipantService participantService;
+    private final SubscriptionServiceIntegration subscriptionDiscService;
 
     public List<ClubEventResponse> findAllEvents(){
         return  clubEventRepository.findAll().stream()
@@ -195,5 +197,11 @@ public class ClubEventService {
 
 
         return eventInfoResponse;
+    }
+
+    public DisciplineResponse getDiscipline(String discId) {
+        return  subscriptionDiscService.getDisciplineInfo(discId);
+
+
     }
 }

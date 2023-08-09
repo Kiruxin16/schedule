@@ -33,6 +33,10 @@ public class ClubEventController {
         return clubEventService.getAllHalls();
     }
 
+    @GetMapping("/test")
+    public DisciplineResponse getResp(@RequestParam(name = "discId")String discId){
+        return clubEventService.getDiscipline(discId);
+    }
 
     @GetMapping("/halls/{id}")
     public List<ClubEventResponse> findAllEventsInHall(@PathVariable(name = "id")Long hallId){

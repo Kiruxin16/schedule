@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import threeoceans.fitness.ru.schedule.dto.DisciplineResponse;
 import threeoceans.fitness.ru.schedule.dto.SubScheduleRequest;
 import threeoceans.fitness.ru.schedule.dto.SubScheduleResponse;
 import threeoceans.fitness.ru.schedule.errors.ReservationException;
@@ -19,17 +20,14 @@ public class SubscriptionServiceIntegration {
 
     private final WebClient subscriptionServiceWebClient;
 
-    public SubScheduleResponse subscribeClient(SubScheduleRequest subRequest){
-        return subscriptionServiceWebClient.post()
-                .uri("/api/v1/clients/subscriptions/subscribe")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(subRequest)
+    public DisciplineResponse getDisciplineInfo(String disciplineName){
+        return subscriptionServiceWebClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v1/subscriptions/discipline")
+                        .queryParam("discName",disciplineName)
+                        .build())
                 .retrieve()
-                .onStatus(httpStatusCode -> httpStatusCode.equals(HttpStatus.NOT_FOUND),
-                        error -> Mono.error(new ResourceNotFoundException("У пользователя нет подходящего абонемента")))
-                .onStatus(httpStatusCode -> httpStatusCode.equals(HttpStatus.BAD_REQUEST),
-                        error -> Mono.error(new ReservationException("количество доступных тренировок не может быть меньше количества зарезервированных.")))
-                .bodyToMono(SubScheduleResponse.class)
+                .bodyToMono(DisciplineResponse.class)
                 .block();
 
     }
