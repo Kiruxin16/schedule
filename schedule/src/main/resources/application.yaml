@@ -23,8 +23,13 @@ integration:
     read-timeout: 10000
     write-timeout: 5000
     connect-timeout: 500
+  subscription-service:
+    url: http://localhost:8193/subscription-service
+    read-timeout: 10000
+    write-timeout: 5000
+    connect-timeout: 500
 
 
 strings:
-  daysOfAWeek: понедельник, вторник, среда, четверг, пятница, суббота, воскресенье
-  schedule: 08:00:00, 09:30:00, 11:00:00, 12:30:00, 16:00:00, 17:30:00, 19:00:00, 20:30:00
+  daysOfAWeek: Понедельник, Вторник, Среда, Четверг, Пятница, Суббота, Воскресенье
+  schedule: 8:00, 9:30, 11:00, 12:30, 16:00, 17:30, 19:00, 20:30

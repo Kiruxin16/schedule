@@ -14,5 +14,11 @@ public interface ClubEventRepository extends JpaRepository<ClubEvent, Long> {
     @Query("select event from ClubEvent event where event.eventDate >= :fromDate and event.eventDate <= :toDate")
     List<ClubEvent> getEventsFromTo(LocalDate fromDate,LocalDate toDate);
 
+    @Query("select event from ClubEvent event " +
+            "left join Participant p on p.clubEvent.id= event.id " +
+            "where p.login= :login " +
+            "and event.eventDate >= :fromDate and event.eventDate <= :toDate")
+    List<ClubEvent> getEventsFromToByLogin(String login,LocalDate fromDate,LocalDate toDate);
+
 
 }
