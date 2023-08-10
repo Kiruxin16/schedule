@@ -35,8 +35,8 @@ public class ClubEvent {
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Column(name = "finish_time")
-    private LocalTime finishTime;
+    @Column(name = "duration")
+    private String duration;
 
     @ManyToOne
     @JoinColumn(name="hall_id")
