@@ -2,13 +2,13 @@ package threeoceans.fitness.ru.schedule.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import threeoceans.fitness.ru.schedule.dto.ClubEventResponse;
-import threeoceans.fitness.ru.schedule.dto.HallInfoResponse;
-import threeoceans.fitness.ru.schedule.dto.HallMenuResponse;
+import threeoceans.fitness.ru.schedule.dto.*;
 import threeoceans.fitness.ru.schedule.services.ClubEventService;
 import threeoceans.fitness.ru.schedule.services.ParticipantService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -17,11 +17,15 @@ import java.util.List;
 public class ClubEventController {
 
     private final ClubEventService clubEventService;
-    private final ParticipantService participantService;
 
-    @GetMapping
-    public List<ClubEventResponse> findAllEvents(){
-        return clubEventService.findAllEvents();
+    @GetMapping("/general")
+    public ScheduleFrontResponse findAllEvents(){
+        return clubEventService.makeAnWeekSchedule();
+    }
+
+    @GetMapping("/personal")
+    public ScheduleFrontResponse findAllEventsForClient(@RequestHeader(name = "login")String login){
+        return clubEventService.makeAnWeekScheduleForClient(login);
     }
 
     @GetMapping("/halls")
@@ -29,6 +33,10 @@ public class ClubEventController {
         return clubEventService.getAllHalls();
     }
 
+    @GetMapping("/test")
+    public DisciplineResponse getResp(@RequestParam(name = "discId")String discId){
+        return clubEventService.getDiscipline(discId);
+    }
 
     @GetMapping("/halls/{id}")
     public List<ClubEventResponse> findAllEventsInHall(@PathVariable(name = "id")Long hallId){
@@ -52,21 +60,28 @@ public class ClubEventController {
 
     }
 
-    @PostMapping("/subscribe/{id}")
-    public void subscribeAtEvent(@RequestHeader(name="login")String login,  @PathVariable(name="id")Long eventID){
 
-         clubEventService.subscribeClient(login,eventID);
+    @GetMapping("/{id}/info")
+    public EventInfoResponse getEventInfo(@PathVariable(name ="id")Long eventId){
+        return clubEventService.getEventInfo(eventId);
+
+    }
+
+
+    @PostMapping("/subscribe/{id}")
+    public ResponseEntity<?> subscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
+
+        return clubEventService.subscribeClient(login,eventID);
 
     }
 
     @PostMapping("/unsubscribe/{id}")
-    public void unsubscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
+    public ResponseEntity<?> unsubscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
 
-        try {
-            clubEventService.unsubscribeClient(login,eventID);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
+        return clubEventService.unsubscribeClient(login,eventID);
+
+
 
 
     }

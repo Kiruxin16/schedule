@@ -5,9 +5,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
-@ConfigurationProperties(prefix = "integration.account-service")
+@ConfigurationProperties(prefix = "integration.subscription-service")
 @Data
-public class AccountServiceIntergrationProperties {
+public class SubscriptionServiceIntegrationProperties {
     private String url;
     private Integer connectionTimeout;
     private Integer readTimeout;

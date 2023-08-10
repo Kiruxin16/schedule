@@ -11,10 +11,10 @@ import threeoceans.fitness.ru.schedule.entities.Hall;
 public class HallConverter {
 
     public HallMenuResponse hallToMenuResponse(Hall hall){
-        HallMenuResponse vallue = new HallMenuResponse();
-        vallue.setId(hall.getId());
-        vallue.setName(hall.getName());
-        return vallue;
+        HallMenuResponse value = new HallMenuResponse();
+        value.setId(hall.getId());
+        value.setName(hall.getName());
+        return value;
     }
 
     public HallInfoResponse hallToInfoResponse(Hall hall){

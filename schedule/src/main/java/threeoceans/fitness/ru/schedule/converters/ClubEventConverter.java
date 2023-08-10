@@ -9,15 +9,17 @@ import threeoceans.fitness.ru.schedule.entities.ClubEvent;
 @RequiredArgsConstructor
 public class ClubEventConverter {
 
-    public ClubEventResponse ClubEventToResponce(ClubEvent event){
+    public ClubEventResponse ClubEventToResponse(ClubEvent event){
+        String correctTime=event.getStartTime().toString().startsWith("0")?
+                event.getStartTime().toString().substring(1,5): event.getStartTime().toString().substring(0,5);
         return ClubEventResponse.builder()
                 .id(event.getId())
                 .discipline(event.getDiscipline())
                 .coachName(event.getCoachName())
-                .eventDate(event.getEventDate())
-                .startTime(event.getStartTime())
-                .finishTime(event.getFinishTime())
-                .hall(event.getHall().getName())
+                .eventDate(event.getEventDate().toString())
+                .startTime(correctTime)
+                .duration(event.getDuration())
+                .hall(event.getHall().getTrigger())
                 .comments(event.getComments())
                 .build();
     }
