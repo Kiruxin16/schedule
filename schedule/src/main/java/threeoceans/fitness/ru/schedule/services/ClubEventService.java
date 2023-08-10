@@ -185,9 +185,12 @@ public class ClubEventService {
         ClubEvent event = clubEventRepository.findById(eventId).orElseThrow(()->new ResourceNotFoundException("занятие не найдено"));
         eventInfoResponse.setHall(hallConverter.hallToInfoResponse(event.getHall()));
 
-        eventInfoResponse.setDiscipline(new DisciplineResponse()); //TODO запилить сервис ходящий в subscription service за дисциплиной
+        eventInfoResponse.setDiscipline(subscriptionDiscService.getDisciplineInfo(event.getDiscipline()));
 
-        eventInfoResponse.setTrainer(new TrainerResponse());//TODO запилить сервис ходящий в account service за тренеhом
+
+        TrainerResponse trainer = new TrainerResponse();
+        trainer.setName(event.getCoachName());
+        eventInfoResponse.setTrainer(trainer);//TODO запилить сервис ходящий в account service за тренером
 
         eventInfoResponse.setDate(event.getEventDate().toString());
         eventInfoResponse.setDuration(event.getDuration().toString());
