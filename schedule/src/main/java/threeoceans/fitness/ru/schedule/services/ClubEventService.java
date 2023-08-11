@@ -195,6 +195,7 @@ public class ClubEventService {
         eventInfoResponse.setDate(event.getEventDate().toString());
         eventInfoResponse.setDuration(event.getDuration().toString());
         eventInfoResponse.setStartTime(event.getStartTime().toString());
+        eventInfoResponse.setComment(event.getComments());
 
 
 

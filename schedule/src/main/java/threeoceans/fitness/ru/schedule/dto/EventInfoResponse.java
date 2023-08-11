@@ -13,5 +13,6 @@ public class EventInfoResponse {
     private String date;
     private String startTime;
     private String duration;
+    private String comment;
 
 }
