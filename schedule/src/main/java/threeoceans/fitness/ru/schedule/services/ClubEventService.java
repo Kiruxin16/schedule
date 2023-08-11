@@ -192,6 +192,7 @@ public class ClubEventService {
         trainer.setName(event.getCoachName());
         eventInfoResponse.setTrainer(trainer);//TODO запилить сервис ходящий в account service за тренером
 
+        eventInfoResponse.setId(eventId);
         eventInfoResponse.setDate(event.getEventDate().toString());
         eventInfoResponse.setDuration(event.getDuration().toString());
         eventInfoResponse.setStartTime(event.getStartTime().toString());
