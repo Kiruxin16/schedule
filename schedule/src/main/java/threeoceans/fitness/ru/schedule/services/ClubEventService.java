@@ -144,14 +144,14 @@ public class ClubEventService {
 
 
 
-    public ScheduleFrontResponse makeAnWeekScheduleForClient(String login) {
-        ScheduleFrontResponse scheduleFrontResponse =new ScheduleFrontResponse(hallService.findAll(),daysOfAWeek,scheduleTimer);
+    public List<Long> makeAnWeekScheduleForClient(String login) {
+        List<Long> ids = new ArrayList<>();
         LocalDate curDate = LocalDate.now();
         LocalDate startOfAWeek= curDate.minusDays(curDate.getDayOfWeek().getValue()-1);
         LocalDate endOfAWeek = curDate.plusDays(7-curDate.getDayOfWeek().getValue());
         List<ClubEvent> events = clubEventRepository.getEventsFromToByLogin(login,startOfAWeek,endOfAWeek);
-        scheduleFrontResponse.setEvents(sortEventsByDays(events));
-        return scheduleFrontResponse;
+        events.forEach(e -> ids.add(e.getId()));
+        return ids;
 
     }
 

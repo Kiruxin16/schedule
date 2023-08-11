@@ -24,7 +24,7 @@ public class ClubEventController {
     }
 
     @GetMapping("/personal")
-    public ScheduleFrontResponse findAllEventsForClient(@RequestHeader(name = "login")String login){
+    public List<Long> findAllEventsForClient(@RequestHeader(name = "login")String login){
         return clubEventService.makeAnWeekScheduleForClient(login);
     }
 
