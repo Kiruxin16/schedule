@@ -69,17 +69,17 @@ public class ClubEventController {
 
 
     @PostMapping("/subscribe/{id}")
-    public ResponseEntity<?> subscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
+    public void subscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
 
-        return clubEventService.subscribeClient(login,eventID);
+        clubEventService.subscribeClient(login,eventID);
 
     }
 
     @PostMapping("/unsubscribe/{id}")
-    public ResponseEntity<?> unsubscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
+    public void unsubscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
 
 
-        return clubEventService.unsubscribeClient(login,eventID);
+         clubEventService.unsubscribeClient(login,eventID);
 
 
 
