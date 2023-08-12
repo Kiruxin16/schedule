@@ -69,9 +69,9 @@ public class ClubEventController {
 
 
     @PostMapping("/subscribe/{id}")
-    public void subscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
+    public ResponseEntity<?> subscribeAtEvent(@RequestHeader(name="login")String login, @PathVariable(name="id")Long eventID){
 
-        clubEventService.subscribeClient(login,eventID);
+        return clubEventService.subscribeClient(login,eventID);
 
     }
 

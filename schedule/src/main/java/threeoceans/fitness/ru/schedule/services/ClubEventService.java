@@ -93,7 +93,7 @@ public class ClubEventService {
 
         participantService.save(participant);
 
-        return ResponseEntity.ok("Вы успешно записались на занятие");
+        return ResponseEntity.ok(new SuccessResponse("Вы успешно записались на занятие"));
 
 
 
