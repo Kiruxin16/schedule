@@ -18,6 +18,10 @@ public class Hall {
     @Column(name="id")
     private Long id;
 
+
+    @Column(name = "trigger")
+    private String trigger;
+
     @Column(name="name")
     private String name;
 
